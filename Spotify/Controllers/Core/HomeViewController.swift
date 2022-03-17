@@ -30,6 +30,8 @@ class HomeViewController: UIViewController {
                 let genres = model.genres
                 var seeds = Set<String>()
                 
+                
+                // Create random genres
                 while seeds.count < 5 {
                     if let random = genres.randomElement() {
                         seeds.insert(random)
