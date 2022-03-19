@@ -25,3 +25,4 @@ struct Album: Codable {
     let total_tracks: Int
     let artists: [Artist]
 }
+
