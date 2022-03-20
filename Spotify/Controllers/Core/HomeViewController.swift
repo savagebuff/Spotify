@@ -9,8 +9,8 @@ import UIKit
 
 enum BrowseSectionType {
     case newReleases(viewModel: [NewReleasesCellViewModel]) // 1
-    case featuredPlaylists(viewModel: [NewReleasesCellViewModel]) // 2
-    case recommendedTracks(viewModel: [NewReleasesCellViewModel]) // 3
+    case featuredPlaylists(viewModel: [FeaturedPlaylistCellViewModel]) // 2
+    case recommendedTracks(viewModel: [RecommendedTrackCellViewModel]) // 3
 }
 
 class HomeViewController: UIViewController {
@@ -151,6 +151,8 @@ class HomeViewController: UIViewController {
         
     }
     
+    // MARK: - configureModels
+    
     private func configureModels(
         newAlbums: [Album],
         playlists: [Playlist],
@@ -165,8 +167,23 @@ class HomeViewController: UIViewController {
                 artistName: $0.artists.first?.name ?? "-"
             )
         })))
-        sections.append(.featuredPlaylists(viewModel: []))
-        sections.append(.recommendedTracks(viewModel: []))
+        
+        sections.append(.featuredPlaylists(viewModel: playlists.compactMap({
+            return FeaturedPlaylistCellViewModel(
+                name: $0.name,
+                artworkURL: URL(string: $0.images.first?.url ?? ""),
+                creatorName: $0.owner.display_name
+            )
+        })))
+        
+        sections.append(.recommendedTracks(viewModel: tracks.compactMap({
+            return RecommendedTrackCellViewModel(
+                name: $0.name,
+                artistName: $0.artists.first?.name ?? "-",
+                artworkURL: URL(string: $0.album.images.first?.url ?? "")
+            )
+        })))
+        
         collectionView.reloadData()
     }
     
@@ -178,6 +195,8 @@ class HomeViewController: UIViewController {
     }
 
 }
+
+// MARK: - Extesion Home View Controller
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -217,7 +236,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             ) as? FeaturedPlaylistCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            cell.backgroundColor = .blue
+            cell.configure(with: viewModels[indexPath.row])
             return cell
         case .recommendedTracks(let viewModels):
             guard let cell = collectionView.dequeueReusableCell(
@@ -226,10 +245,12 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             ) as? RecommendedTrackCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            cell.backgroundColor = .orange
+            cell.configure(with: viewModels[indexPath.row])
             return cell
         }
     }
+    
+    // MARK: - Section Layout
     
     static func createSectionLayout(section: Int) -> NSCollectionLayoutSection {
         switch section {
