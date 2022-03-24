@@ -15,11 +15,11 @@ enum BrowseSectionType {
     var title : String {
         switch self {
         case .newReleases:
-            return "New Released Albums"
+            return "Новые Релизы Альбомов"
         case .featuredPlaylists:
-            return "Featured Playlists"
+            return "Избранные Плейлисты"
         case .recommendedTracks:
-            return "Recommended"
+            return "Рекомендуемые"
         }
     }
 }
@@ -52,7 +52,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Browse"
+        title = "Главная"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "gear"),
@@ -108,7 +108,6 @@ class HomeViewController: UIViewController {
         group.enter()
         group.enter()
         group.enter()
-        print("Strat fetch")
         var newReleases: NewReleasesResponse?
         var featuredPlaylist: FeaturedPlaylistsResponse?
         var recommendations: RecommendationsResponse?
@@ -175,7 +174,6 @@ class HomeViewController: UIViewController {
                 fatalError("Nodels are nil")
                 return
             }
-            print("Configurating viewModels")
             self.configureModels(
                 newAlbums: newAlbums,
                 playlists: playlists,

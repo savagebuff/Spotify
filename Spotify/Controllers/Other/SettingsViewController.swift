@@ -21,7 +21,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         configureModels()
-        title = "Settings"
+        title = "Настройки"
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)
         tableView.dataSource = self
@@ -31,10 +31,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     private func configureModels() {
         sections.append(
             Section(
-                title: "Profile",
+                title: "Профиль",
                 options:
                     [Option(
-                        title: "View You Profile",
+                        title: "Просмотр Вашего Профиля",
                         handler: { [weak self] in
                             DispatchQueue.main.async {
                                 self?.viewProfile()
@@ -46,10 +46,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         sections.append(
             Section(
-                title: "Account",
+                title: "Аккаунт",
                 options:
                     [Option(
-                        title: "Sign Out",
+                        title: "Выйти",
                         handler: { [weak self] in
                             DispatchQueue.main.async {
                                 self?.signOutTapped()
@@ -66,7 +66,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func viewProfile() {
         let vc = ProfileViewController()
-        vc.title = "Profile"
+        vc.title = "Профиль"
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }

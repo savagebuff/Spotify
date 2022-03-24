@@ -22,7 +22,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Profile"
+        title = "Профиль"
         tableView.delegate = self
         tableView.dataSource = self
         view.addSubview(tableView)
@@ -52,10 +52,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func updateUI(with model: UserProfile) {
         tableView.isHidden = false
         // configure table models
-        models.append("FullName: \(model.display_name)")
-        models.append("Email Address: \(model.email)")
-        models.append("User ID: \(model.id)")
-        models.append("Plan: \(model.product)")
+        models.append("Полное Имя: \(model.display_name)")
+        models.append("Email адрес: \(model.email)")
+        models.append("ID Пользователя: \(model.id)")
+        models.append("Тарифный план: \(model.product)")
         createTableHeader(with: model.images.first?.url)
         tableView.reloadData()
     }
