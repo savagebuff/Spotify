@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C356BA9280C796E00C34318 /* SearchResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C356BA8280C796D00C34318 /* SearchResultResponse.swift */; };
+		2C356BAB280C7BE900C34318 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C356BAA280C7BE900C34318 /* SearchResult.swift */; };
 		2C56556B27DE2B460042D26F /* SettingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56556A27DE2B460042D26F /* SettingsModels.swift */; };
 		2C56556D27E255E80042D26F /* NewReleasesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56556C27E255E80042D26F /* NewReleasesResponse.swift */; };
 		2C56556F27E257A30042D26F /* APIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56556E27E257A30042D26F /* APIImage.swift */; };
@@ -59,6 +61,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C356BA8280C796D00C34318 /* SearchResultResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultResponse.swift; sourceTree = "<group>"; };
+		2C356BAA280C7BE900C34318 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		2C56556A27DE2B460042D26F /* SettingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModels.swift; sourceTree = "<group>"; };
 		2C56556C27E255E80042D26F /* NewReleasesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReleasesResponse.swift; sourceTree = "<group>"; };
 		2C56556E27E257A30042D26F /* APIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIImage.swift; sourceTree = "<group>"; };
@@ -197,6 +201,8 @@
 				2C8F915A27E73BD4003C7996 /* AlbumDetailsResponse.swift */,
 				2C8F915C27E741A2003C7996 /* PlaylistDetailsResponse.swift */,
 				2C8F916A27EC652E003C7996 /* AllCategoriesResponse.swift */,
+				2C356BA8280C796D00C34318 /* SearchResultResponse.swift */,
+				2C356BAA280C7BE900C34318 /* SearchResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -415,6 +421,7 @@
 				2C8F916B27EC652E003C7996 /* AllCategoriesResponse.swift in Sources */,
 				2C8F916327E77752003C7996 /* TitleHeaderCollectionReusableView.swift in Sources */,
 				2C8F915927E73550003C7996 /* AlbumViewController.swift in Sources */,
+				2C356BA9280C796E00C34318 /* SearchResultResponse.swift in Sources */,
 				2C8F916127E7642A003C7996 /* PlaylistHeaderViewViewModel.swift in Sources */,
 				2C8F915527E72360003C7996 /* FeaturedPlaylistCellViewModel.swift in Sources */,
 				2C76B54027DD209E00A7DBDE /* WelcomeViewController.swift in Sources */,
@@ -436,6 +443,7 @@
 				2C76B51B27DD1C3B00A7DBDE /* AppDelegate.swift in Sources */,
 				2C76B55827DD219300A7DBDE /* UserProfile.swift in Sources */,
 				2C76B55A27DD343C00A7DBDE /* Extensions.swift in Sources */,
+				2C356BAB280C7BE900C34318 /* SearchResult.swift in Sources */,
 				2C8F915F27E75F2F003C7996 /* PlaylistHeaderCollectionReusableView.swift in Sources */,
 				2C76B53A27DD204900A7DBDE /* LibraryViewController.swift in Sources */,
 				2C76B55627DD218600A7DBDE /* Artist.swift in Sources */,
