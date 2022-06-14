@@ -172,7 +172,6 @@ class HomeViewController: UIViewController {
                   let playlists = featuredPlaylist?.playlists.items,
                   let tracks = recommendations?.tracks else {
                 fatalError("Nodels are nil")
-                return
             }
             self.configureModels(
                 newAlbums: newAlbums,
