@@ -8,9 +8,14 @@
 import UIKit
 import SDWebImage
 
-class SearchResultSubtitleTableViewCell: UITableViewCell {
-    // MARK: - properties
-    static let identifier = "SearchResultSubtitleTableViewCell"
+///Ячейки таблицы для результатов поиска с описанием
+final class SearchResultSubtitleTableViewCell: UITableViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "SearchResultSubtitleTableViewCell"
+    
+    // MARK: - Private Properties
     
     private let label: UILabel = {
         let label = UILabel()
@@ -31,9 +36,42 @@ class SearchResultSubtitleTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    // MARK: - init
+    // MARK: - Initialization
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupContent()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    // MARK: - Life Cycle
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupFrames()
+    }
+
+    // MARK: - Public Methods
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        iconImageView.image = nil
+        label.text = nil
+        subtitleLabel.text = nil
+    }
+    
+    public func configure(with viewModel: SearchResultSubtitleTableViewCellViewModel) {
+        label.text = viewModel.title
+        subtitleLabel.text = viewModel.subtitle
+        iconImageView.sd_setImage(with: viewModel.imageURL, completed: nil)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupContent() {
         contentView.addSubview(label)
         contentView.addSubview(subtitleLabel)
         contentView.addSubview(iconImageView)
@@ -41,14 +79,7 @@ class SearchResultSubtitleTableViewCell: UITableViewCell {
         accessoryType = .disclosureIndicator
     }
     
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-    // MARK: - livecycle
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
+    private func setupFrames() {
         let imageSize: CGFloat = contentView.height - 10
         iconImageView.frame = CGRect(
             x: 10,
@@ -71,21 +102,5 @@ class SearchResultSubtitleTableViewCell: UITableViewCell {
             width: contentView.width - iconImageView.right - 15,
             height: labelHeight
         )
-    }
-
-    // MARK: - prepare for reuse
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        iconImageView.image = nil
-        label.text = nil
-        subtitleLabel.text = nil
-    }
-    
-    // MARK: - configure with VM
-    func configure(with viewModel: SearchResultSubtitleTableViewCellViewModel) {
-        label.text = viewModel.title
-        subtitleLabel.text = viewModel.subtitle
-        iconImageView.sd_setImage(with: viewModel.imageURL, completed: nil)
     }
 }

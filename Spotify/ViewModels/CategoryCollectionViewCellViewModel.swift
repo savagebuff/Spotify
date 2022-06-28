@@ -7,8 +7,8 @@
 
 import Foundation
 
+///Вью модель для ячейки коллекции категорий
 struct CategoryCollectionViewCellViewModel {
     let title: String
     let artworkURL: URL?
-
 }

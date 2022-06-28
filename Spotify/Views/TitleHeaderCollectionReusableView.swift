@@ -7,8 +7,12 @@
 
 import UIKit
 
-class TitleHeaderCollectionReusableView: UICollectionReusableView {
-    static let identifier = "TitleHeaderCollectionReusableView"
+///Вью тайтла для главного экрана
+final class TitleHeaderCollectionReusableView: UICollectionReusableView {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "TitleHeaderCollectionReusableView"
     
     // MARK: - Private Properties
     
@@ -20,8 +24,7 @@ class TitleHeaderCollectionReusableView: UICollectionReusableView {
         return label
     }()
     
-    
-    // MARK: - Init
+    // MARK: - Initialization
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +36,7 @@ class TitleHeaderCollectionReusableView: UICollectionReusableView {
         fatalError()
     }
     
-    // MARK: - Methods
+    // MARK: - Life Cycle
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -45,7 +48,9 @@ class TitleHeaderCollectionReusableView: UICollectionReusableView {
         )
     }
     
-    func configure(with title: String) {
+    // MARK: - Public Methods
+    
+    public func configure(with title: String) {
         label.text = title
     }
 }

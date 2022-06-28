@@ -5,10 +5,10 @@
 //  Created by Dinar Garaev on 12.03.2022.
 //
 
-import Foundation
 import UIKit
 
 // MARK: - UIView
+
 extension UIView {
     var width: CGFloat {
         return frame.size.width
@@ -36,6 +36,7 @@ extension UIView {
 }
 
 // MARK: - DateFormatter
+
 extension DateFormatter {
     static let dateFormatter: DateFormatter = {
        let dateFormatter = DateFormatter()
@@ -51,6 +52,7 @@ extension DateFormatter {
 }
 
 // MARK: - String
+
 extension String {
     static func formattedDate(string: String) -> String{
         guard let date = DateFormatter.dateFormatter.date(from: string) else {

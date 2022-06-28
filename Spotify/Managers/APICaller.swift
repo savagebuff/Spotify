@@ -7,11 +7,16 @@
 
 import Foundation
 
-
 final class APICaller {
-    static let shared = APICaller()
     
-    private init() {}
+    // MARK: - Public Properties
+    
+    public static let shared = APICaller()
+    
+    enum HTTPMethod: String {
+        case GET
+        case POST
+    }
     
     struct Constants {
         static let baseAPIURL = "https://api.spotify.com/v1"
@@ -20,6 +25,10 @@ final class APICaller {
     enum APIError: Error {
         case failedToGetData
     }
+    
+    // MARK: - Initialization
+    
+    private init() {}
     
     // MARK: - Albums
     public func getAlbumDetails(for album: Album, completion: @escaping ((Result<AlbumDetailsResponse, Error>) -> Void)) {
@@ -268,12 +277,7 @@ final class APICaller {
         }
     }
     
-    // MARK: - Private
-    
-    enum HTTPMethod: String {
-        case GET
-        case POST
-    }
+    // MARK: - Private Methods
     
     private func createRequest(
         with url: URL?,

@@ -7,6 +7,7 @@
 
 import UIKit
 
+///Контроллер плейлистов
 class PlaylistViewController: UIViewController {
 
     // MARK: - Private Properties
@@ -53,7 +54,7 @@ class PlaylistViewController: UIViewController {
     
     private var viewModels = [RecommendedTrackCellViewModel]()
     
-    // MARK: - Init
+    // MARK: - Initializition
     
     init(playlist: Playlist) {
         self.playlist = playlist
@@ -64,15 +65,52 @@ class PlaylistViewController: UIViewController {
         fatalError()
     }
     
-    // MARK: - viewDidLoad && viewDidLayoutSubview
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
+    }
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        settingView()
+        setupCollectionView()
+        setupDelegates()
+        fetchPlaylistDetails()
+        setupNavigationItem()
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func didTapShare() {
+        guard let url = URL(string: playlist.external_urls["spotify"] ?? "") else {
+            return
+        }
+        
+        let vc = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: []
+        )
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(vc, animated: true)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
         title = playlist.name
         view.backgroundColor = .systemBackground
         
         view.addSubview(collectionView)
+    }
+    
+    private func setupDelegates() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    private func setupCollectionView() {
         collectionView.register(
             RecommendedTrackCollectionViewCell.self,
             forCellWithReuseIdentifier: RecommendedTrackCollectionViewCell.identifier
@@ -83,9 +121,9 @@ class PlaylistViewController: UIViewController {
             withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier
         )
         collectionView.backgroundColor = .systemBackground
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
+    }
+    
+    private func fetchPlaylistDetails() {
         APICaller.shared.getPlaylistDetails(for: playlist) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -104,36 +142,18 @@ class PlaylistViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    private func setupNavigationItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
             target: self,
             action: #selector(didTapShare)
         )
     }
-    
-    @objc private func didTapShare() {
-        guard let url = URL(string: playlist.external_urls["spotify"] ?? "") else {
-            return
-        }
-        
-        
-        let vc = UIActivityViewController(
-            activityItems: [url],
-            applicationActivities: []
-        )
-        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-        present(vc, animated: true)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        collectionView.frame = view.bounds
-    }
-    
 }
 
-// MARK: - Data Source, Delegate
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
 extension PlaylistViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {

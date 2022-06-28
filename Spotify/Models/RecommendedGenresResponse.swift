@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для рекомедовованных жанров
 struct RecommendedGenresResponse: Codable {
     let genres: [String]
 }

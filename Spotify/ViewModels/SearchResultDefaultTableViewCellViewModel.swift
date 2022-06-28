@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для ячейки таблицы дефолтных результатов поиска
 struct SearchResultDefaultTableViewCellViewModel {
     let title: String
     let imageURL: URL?

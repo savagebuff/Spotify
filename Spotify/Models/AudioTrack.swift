@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель аудиодорог
 struct AudioTrack: Codable {
     let album: Album?
     let artists: [Artist]

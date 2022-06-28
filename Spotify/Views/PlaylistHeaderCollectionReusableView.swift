@@ -12,10 +12,13 @@ protocol PlaylistHeaderCollectionReusableViewDelegate: AnyObject {
     func PlaylistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView)
 }
 
+///Вью хеддера плейлистов
 final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
-    static let identifier = "PlaylistHeaderCollectionReusableView"
     
-    weak var delegate: PlaylistHeaderCollectionReusableViewDelegate?
+    // MARK: - Public Propertis
+    
+    public static let identifier = "PlaylistHeaderCollectionReusableView"
+    public weak var delegate: PlaylistHeaderCollectionReusableViewDelegate?
     
     // MARK: - Private Properties
     
@@ -47,7 +50,7 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         return imageView
     }()
     
-    private let playAllButton: UIButton = {
+    private lazy var playAllButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemGreen
         let image = UIImage(systemName: "play.fill",
@@ -60,35 +63,59 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
         button.tintColor = .white
         button.layer.cornerRadius = 28
         button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(didTapPlayAll), for: .touchUpInside)
         return button
     }()
     
-    // MARK: - Init
+    // MARK: - Initialization
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemBackground
-        addSubview(imageView)
-        addSubview(nameLabel)
-        addSubview(descriptionLabel)
-        addSubview(ownerLabel)
-        addSubview(playAllButton)
-        playAllButton.addTarget(self, action: #selector(didTapPlayAll), for: .touchUpInside)
+        settingView()
+        addSubviews()
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
     
-    // MARK: - Methods
+    // MARK: - Life Cycle
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupFrames()
+    }
+    
+    // MARK: - Public Methods
+    
+    func configure(with viewModel: PlaylistHeaderViewViewModel) {
+        nameLabel.text = viewModel.name
+        descriptionLabel.text = viewModel.description
+        ownerLabel.text = viewModel.ownerName
+        imageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
+    }
+    
+    // MARK: - Actions
     
     @objc private func didTapPlayAll() {
         delegate?.PlaylistHeaderCollectionReusableViewDidTapPlayAll(self)
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
+    // MARK: - Private Methods
+    
+    private func settingView() {
+        backgroundColor = .systemBackground
+    }
+    
+    private func addSubviews() {
+        addSubview(imageView)
+        addSubview(nameLabel)
+        addSubview(descriptionLabel)
+        addSubview(ownerLabel)
+        addSubview(playAllButton)
+    }
+    
+    private func setupFrames() {
         let imageSize: CGFloat = height/1.8
         imageView.frame = CGRect(
             x: (width-imageSize)/2,
@@ -124,12 +151,5 @@ final class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
             width: 56,
             height: 56
         )
-    }
-    
-    func configure(with viewModel: PlaylistHeaderViewViewModel) {
-        nameLabel.text = viewModel.name
-        descriptionLabel.text = viewModel.description
-        ownerLabel.text = viewModel.ownerName
-        imageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
     }
 }

@@ -7,11 +7,18 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+final class TabBarViewController: UITabBarController {
 
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupNavigationControllers()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupNavigationControllers() {
         let vc1 = HomeViewController()
         let vc2 = SearchViewController()
         let vc3 = LibraryViewController()
@@ -19,7 +26,6 @@ class TabBarViewController: UITabBarController {
         vc1.title = "Главная"
         vc2.title = "Поиск"
         vc3.title = "Библиотека"
-        
         
         vc1.navigationItem.largeTitleDisplayMode = .always
         vc2.navigationItem.largeTitleDisplayMode = .always
@@ -43,5 +49,4 @@ class TabBarViewController: UITabBarController {
         
         setViewControllers([nav1, nav2, nav3], animated: false)
     }
-
 }

@@ -7,8 +7,11 @@
 
 import UIKit
 
-class LibraryViewController: UIViewController {
+///Контроллер библиотеки
+final class LibraryViewController: UIViewController {
 
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

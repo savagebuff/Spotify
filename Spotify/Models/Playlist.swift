@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель плейлистов
 struct Playlist: Codable {
     let description: String
     let external_urls: [String : String]

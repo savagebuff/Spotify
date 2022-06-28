@@ -8,9 +8,14 @@
 import UIKit
 import SDWebImage
 
-class SearchResultDefaultTableViewCell: UITableViewCell {
-    // MARK: - properties
-    static let identifier = "SearchResultDefaultTableViewCell"
+///Ячейки для таблицы результатов поиска
+final class SearchResultDefaultTableViewCell: UITableViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "SearchResultDefaultTableViewCell"
+    
+    // MARK: - Private Properties
     
     private let label: UILabel = {
         let label = UILabel()
@@ -24,23 +29,48 @@ class SearchResultDefaultTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    // MARK: - init
+    // MARK: - Initialization
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(label)
-        contentView.addSubview(iconImageView)
-        contentView.clipsToBounds = true
-        accessoryType = .disclosureIndicator
+        setupContent()
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
     
-    // MARK: - livecycle
+    // MARK: - Life Cycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
+        setupFrames()
+    }
+
+    // MARK: - Public Methods
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
         
+        iconImageView.image = nil
+        label.text = nil
+    }
+    
+    public func configure(with viewModel: SearchResultDefaultTableViewCellViewModel) {
+        label.text = viewModel.title
+        iconImageView.sd_setImage(with: viewModel.imageURL, completed: nil)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupContent() {
+        contentView.addSubview(label)
+        contentView.addSubview(iconImageView)
+        contentView.clipsToBounds = true
+        accessoryType = .disclosureIndicator
+    }
+    
+    private func setupFrames() {
         let imageSize: CGFloat = contentView.height - 10
         
         iconImageView.frame = CGRect(
@@ -58,19 +88,5 @@ class SearchResultDefaultTableViewCell: UITableViewCell {
             width: contentView.width - iconImageView.right - 15,
             height: contentView.height
         )
-    }
-
-    // MARK: - prepare for reuse
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        iconImageView.image = nil
-        label.text = nil
-    }
-    
-    // MARK: - configure with VM
-    func configure(with viewModel: SearchResultDefaultTableViewCellViewModel) {
-        label.text = viewModel.title
-        iconImageView.sd_setImage(with: viewModel.imageURL, completed: nil)
     }
 }

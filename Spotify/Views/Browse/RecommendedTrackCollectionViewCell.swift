@@ -7,8 +7,14 @@
 
 import UIKit
 
-class RecommendedTrackCollectionViewCell: UICollectionViewCell {
-    static let identifier = "RecommendedTrackCollectionViewCell"
+///Ячейки коллекций для рекомендованных треков
+final class RecommendedTrackCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "RecommendedTrackCollectionViewCell"
+    
+    // MARK: - Private Properties
     
     private let albumCoverImageView: UIImageView = {
         let imageView = UIImageView()
@@ -31,8 +37,42 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Initialization
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupContent()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    // MARK: - Life Cycle
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupFrames()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        trackNameLabel.text = nil
+        artistNameLabel.text = nil
+        albumCoverImageView.image = nil
+    }
+    
+    // MARK: - Public Methods
+    
+    public func configure(with viewModel: RecommendedTrackCellViewModel) {
+        trackNameLabel.text = viewModel.name
+        artistNameLabel.text = viewModel.artistName
+        albumCoverImageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
+    }
+    
+    // MARK: - Private Properties
+    
+    private func setupContent() {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubview(albumCoverImageView)
         contentView.addSubview(trackNameLabel)
@@ -40,13 +80,7 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
         contentView.clipsToBounds = true
     }
     
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
+    private func setupFrames() {
         albumCoverImageView.frame = CGRect(
             x: 5,
             y: 2,
@@ -67,19 +101,5 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
             width: contentView.width-albumCoverImageView.right-15,
             height: contentView.height/2
         )
-        
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        trackNameLabel.text = nil
-        artistNameLabel.text = nil
-        albumCoverImageView.image = nil
-    }
-    
-    func configure(with viewModel: RecommendedTrackCellViewModel) {
-        trackNameLabel.text = viewModel.name
-        artistNameLabel.text = viewModel.artistName
-        albumCoverImageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
     }
 }

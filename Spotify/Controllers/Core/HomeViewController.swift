@@ -24,9 +24,10 @@ enum BrowseSectionType {
     }
 }
 
-class HomeViewController: UIViewController {
+///Контроллер гланого экрана
+final class HomeViewController: UIViewController {
     
-    // MARK: - private Properties HomeVC
+    // MARK: - Private Properties
     
     private var newAlbums: [Album] = []
     private var playlists: [Playlist] = []
@@ -48,21 +49,12 @@ class HomeViewController: UIViewController {
     
     private var sections = [BrowseSectionType]()
 
-    // MARK: - viewDidLoad && viewDidLayoutSubview
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Главная"
-        view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "gear"),
-            style: .done,
-            target: self,
-            action: #selector(didTabSettings)
-        )
-        
+        settingView()
         confiqureCollectionView()
-        view.addSubview(spinner)
         fetchData()
     }
     
@@ -71,7 +63,28 @@ class HomeViewController: UIViewController {
         collectionView.frame = view.bounds
     }
     
-    // MARK: - Confiqure CollectionView
+    // MARK: - Actions
+    
+    @objc private func didTabSettings() {
+        let vc = SettingsViewController()
+        vc.title = "Settings"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
+        title = "Главная"
+        view.backgroundColor = .systemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "gear"),
+            style: .done,
+            target: self,
+            action: #selector(didTabSettings)
+        )
+        view.addSubview(spinner)
+    }
     
     private func confiqureCollectionView() {
         view.addSubview(collectionView)
@@ -100,8 +113,6 @@ class HomeViewController: UIViewController {
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
     }
-    
-    // MARK: - fetchData
     
     private func fetchData() {
         let group = DispatchGroup()
@@ -182,8 +193,6 @@ class HomeViewController: UIViewController {
         
     }
     
-    // MARK: - configureModels
-    
     private func configureModels(
         newAlbums: [Album],
         playlists: [Playlist],
@@ -222,17 +231,10 @@ class HomeViewController: UIViewController {
         
         collectionView.reloadData()
     }
-    
-    @objc func didTabSettings() {
-        let vc = SettingsViewController()
-        vc.title = "Settings"
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
-    }
 
 }
 
-// MARK: - Extesion HomeVC
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -286,8 +288,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
-    // MARK: - didSelectItemAt
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let section = sections[indexPath.section]
@@ -309,8 +309,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
-    // MARK: - viewForSupplementaryElementOfKind
-    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
@@ -324,8 +322,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         header.configure(with: title)
         return header
     }
-    
-    // MARK: - Section Layout
     
     static func createSectionLayout(section: Int) -> NSCollectionLayoutSection {
         let supplementaryViews = [

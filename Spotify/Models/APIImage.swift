@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель изображения
 struct APIImage: Codable {
     let url: String
 }

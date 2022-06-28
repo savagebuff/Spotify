@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для ячейки новых релизов
 struct NewReleasesCellViewModel {
     let name: String
     let artworkURL: URL?

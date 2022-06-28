@@ -16,11 +16,14 @@ protocol SearchResultsViewControllerDelegate: AnyObject {
     func didTapResult(_ result: SearchResult)
 }
 
-class SearchResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+///Контроллер результатов поиска
+class SearchResultsViewController: UIViewController {
     
-    weak var delegate: SearchResultsViewControllerDelegate?
+    // MARK: - Public Propeties
     
-    // MARK: - private properties
+    public weak var delegate: SearchResultsViewControllerDelegate?
+    
+    // MARK: - Private Properties
     
     private var sections: [SearchSection] = []
     
@@ -33,15 +36,12 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         return tableView
     }()
     
-    // MARK: - live cycle
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .clear
-        
-        view.addSubview(tableView)
-        tableView.delegate = self
-        tableView.dataSource = self
+        settingView()
+        setupDelegates()
     }
     
     override func viewDidLayoutSubviews() {
@@ -49,8 +49,9 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.frame = view.bounds
     }
     
-    // MARK: - update
-    func update(with results: [SearchResult]) {
+    // MARK: - Public Methods
+    
+    public func update(with results: [SearchResult]) {
         let artists = results.filter({
             switch $0 {
             case .artist: return true
@@ -89,8 +90,22 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.isHidden = results.isEmpty
     }
     
-    // MARK: - data source, delegate
+    // MARK: - Private Methods
     
+    private func setupDelegates() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    private func settingView() {
+        view.backgroundColor = .clear
+        view.addSubview(tableView)
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель артистов
 struct Artist: Codable {
     let id: String
     let name: String

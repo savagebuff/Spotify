@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель профиля пользователя
 struct UserProfile: Codable {
     let country: String
     let display_name: String

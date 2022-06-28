@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для результатов поиска
 struct SearchResultResponse: Codable {
     let albums: SearchAlbumResponse
     let artists: SearchArtistsResponse

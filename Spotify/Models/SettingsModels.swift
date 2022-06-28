@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель настроек
 struct Section {
     let title: String
     let options: [Option]

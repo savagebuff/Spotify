@@ -7,8 +7,14 @@
 
 import UIKit
 
-class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
-    static let identifier = "FeaturedPlaylistCollectionViewCell"
+///Ячейки коллекций для избранных плейлистов
+final class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "FeaturedPlaylistCollectionViewCell"
+    
+    // MARK: - Private Properties
     
     private let playlistCoverImageView: UIImageView = {
         let imageView = UIImageView()
@@ -35,12 +41,11 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Initialization
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.addSubview(playlistCoverImageView)
-        contentView.addSubview(playlistNameLabel)
-        contentView.addSubview(creatorNameLabel)
-        contentView.clipsToBounds = true
+        setupContent()
     }
     
     required init?(coder: NSCoder) {
@@ -49,7 +54,34 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        setupFrames()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        playlistNameLabel.text = nil
+        creatorNameLabel.text = nil
+        playlistCoverImageView.image = nil
+    }
+    
+    // MARK: - Public Methods
+    
+    func configure(with viewModel: FeaturedPlaylistCellViewModel) {
+        playlistNameLabel.text = viewModel.name
+        creatorNameLabel.text = viewModel.creatorName
+        playlistCoverImageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupContent() {
+        contentView.addSubview(playlistCoverImageView)
+        contentView.addSubview(playlistNameLabel)
+        contentView.addSubview(creatorNameLabel)
+        contentView.clipsToBounds = true
+    }
+    
+    private func setupFrames() {
         creatorNameLabel.frame = CGRect(
             x: 3,
             y: contentView.height-30,
@@ -71,19 +103,5 @@ class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
             width: imageSize,
             height: imageSize
         )
-        
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        playlistNameLabel.text = nil
-        creatorNameLabel.text = nil
-        playlistCoverImageView.image = nil
-    }
-    
-    func configure(with viewModel: FeaturedPlaylistCellViewModel) {
-        playlistNameLabel.text = viewModel.name
-        creatorNameLabel.text = viewModel.creatorName
-        playlistCoverImageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
     }
 }

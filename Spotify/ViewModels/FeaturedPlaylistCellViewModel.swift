@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для ячейки избранных плейлистов
 struct FeaturedPlaylistCellViewModel {
     let name: String
     let artworkURL: URL?

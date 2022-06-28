@@ -8,8 +8,15 @@
 import UIKit
 import WebKit
 
+///Коллекция аутентификации
 class AuthViewController: UIViewController, WKNavigationDelegate {
     
+    // MARK: - Public Properties
+    
+    public var completionHandler: ((Bool) -> Void)?
+    
+    // MARK: - Private Properties
+
     private let webView: WKWebView = {
         let prefs = WKWebpagePreferences()
         prefs.allowsContentJavaScript = true
@@ -19,20 +26,15 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
         
         return webView
     }()
-    
-    public var completionHandler: ((Bool) -> Void)?
 
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        title = "Sign In"
-        view.backgroundColor = .systemBackground
-        webView.navigationDelegate = self
-        view.addSubview(webView)
-        guard let url = AuthManager.shared.signInURL else {
-            return
-        }
-        webView.load(URLRequest(url: url))
+        
+        setupDelegate()
+        settingView()
+        setupWebView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -40,7 +42,9 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
         webView.frame = view.bounds
     }
 
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    // MARK: - Public Methods
+    
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         guard let url = webView.url else {
             return
         }
@@ -58,5 +62,24 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
                 self?.completionHandler?(success)
             }
         }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
+        title = "Sign In"
+        view.backgroundColor = .systemBackground
+        view.addSubview(webView)
+    }
+    
+    private func setupDelegate() {
+        webView.navigationDelegate = self
+    }
+    
+    private func setupWebView() {
+        guard let url = AuthManager.shared.signInURL else {
+            return
+        }
+        webView.load(URLRequest(url: url))
     }
 }

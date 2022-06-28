@@ -8,10 +8,15 @@
 import UIKit
 import SDWebImage
 
-class CategoryCollectionViewCell: UICollectionViewCell {
-    static let identifier = "CategoryCollectionViewCell"
+///Коллекция категорий
+final class CategoryCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "CategoryCollectionViewCell"
     
     // MARK: - Private Properties
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -34,7 +39,6 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         .systemOrange,
         .systemGreen,
         .systemRed,
-//        .systemMint,
         .systemYellow,
         .systemIndigo,
         .systemTeal,
@@ -42,7 +46,8 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         .darkGray
     ]
     
-    // MARK: - Init
+    // MARK: - Initialization
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.layer.cornerRadius = 8
@@ -55,17 +60,34 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         fatalError()
     }
     
-    // MARK: - Methods
+    // MARK: - Life Cycle
     
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
-        imageView.image = UIImage(systemName: "music.quarternote.3", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .regular))
+        imageView.image = UIImage(
+            systemName: "music.quarternote.3",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .regular)
+        )
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        setupFrames()
+    }
+    
+    // MARK: - Public Methods
+    
+    public func configure(with viewModel: CategoryCollectionViewCellViewModel) {
+        label.text = viewModel.title
+//        расскомментируй чтобы подцеплять иконки (плохо выглядит)
+//        imageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
+        contentView.backgroundColor = colors.randomElement()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupFrames() {
         label.frame = CGRect(
             x: 10,
             y: contentView.height/2,
@@ -79,12 +101,5 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             width: contentView.width/2,
             height: contentView.height/2
         )
-    }
-    
-    func configure(with viewModel: CategoryCollectionViewCellViewModel) {
-        label.text = viewModel.title
-//        раскомментируй чтобы подцеплять иконки(Плохо выглядит)
-//        imageView.sd_setImage(with: viewModel.artworkURL, completed: nil)
-        contentView.backgroundColor = colors.randomElement()
     }
 }

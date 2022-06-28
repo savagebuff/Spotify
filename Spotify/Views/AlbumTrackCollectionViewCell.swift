@@ -5,11 +5,16 @@
 //  Created by Dinar Garaev on 20.03.2022.
 //
 
-import Foundation
 import UIKit
 
-class AlbumTrackCollectionViewCell: UICollectionViewCell {
-    static let identifier = "AlbumTrackCollectionViewCell"
+///Коллекция треков альбома
+final class AlbumTrackCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
+    
+    public static let identifier = "AlbumTrackCollectionViewCell"
+    
+    // MARK: - Private Properties
     
     private let trackNameLabel: UILabel = {
         let label = UILabel()
@@ -25,12 +30,11 @@ class AlbumTrackCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Initialization
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .secondarySystemBackground
-        contentView.addSubview(trackNameLabel)
-        contentView.addSubview(artistNameLabel)
-        contentView.clipsToBounds = true
+        setupContent()
     }
     
     required init?(coder: NSCoder) {
@@ -39,7 +43,34 @@ class AlbumTrackCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        setupFrames()
+    }
+    
+    // MARK: - Life Cycle
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        trackNameLabel.text = nil
+        artistNameLabel.text = nil
+    }
+    
+    // MARK: - Public Methods
+    
+    public func configure(with viewModel: AlbumCollectionViewCellViewModel) {
+        trackNameLabel.text = viewModel.name
+        artistNameLabel.text = viewModel.artistName
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupContent() {
+        contentView.backgroundColor = .secondarySystemBackground
+        contentView.addSubview(trackNameLabel)
+        contentView.addSubview(artistNameLabel)
+        contentView.clipsToBounds = true
+    }
+    
+    private func setupFrames() {
         trackNameLabel.frame = CGRect(
             x: 10,
             y: 0,
@@ -53,17 +84,5 @@ class AlbumTrackCollectionViewCell: UICollectionViewCell {
             width: contentView.width-15,
             height: contentView.height/2
         )
-        
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        trackNameLabel.text = nil
-        artistNameLabel.text = nil
-    }
-    
-    func configure(with viewModel: AlbumCollectionViewCellViewModel) {
-        trackNameLabel.text = viewModel.name
-        artistNameLabel.text = viewModel.artistName
     }
 }

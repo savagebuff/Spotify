@@ -7,8 +7,11 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+///Контроллер настроек
+class SettingsViewController: UIViewController {
 
+    // MARK: - Private Properties
+    
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.register(UITableViewCell.self,
@@ -18,12 +21,24 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private var sections = [Section]()
     
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureModels()
+        settingView()
+        setupDelegates()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
         title = "Настройки"
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)
+    }
+    
+    private func setupDelegates() {
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -32,30 +47,32 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         sections.append(
             Section(
                 title: "Профиль",
-                options:
-                    [Option(
+                options: [
+                    Option(
                         title: "Просмотр Вашего Профиля",
                         handler: { [weak self] in
                             DispatchQueue.main.async {
                                 self?.viewProfile()
                             }
-                        })
-                    ]
+                        }
+                    )
+                ]
             )
         )
         
         sections.append(
             Section(
                 title: "Аккаунт",
-                options:
-                    [Option(
+                options: [
+                    Option(
                         title: "Выйти",
                         handler: { [weak self] in
                             DispatchQueue.main.async {
                                 self?.signOutTapped()
                             }
-                        })
-                    ]
+                        }
+                    )
+                ]
             )
         )
     }
@@ -75,9 +92,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
-    
-    // MARK - TableView
-    
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension SettingsViewController:  UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
@@ -104,5 +123,4 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let model = sections[section]
         return model.title
     }
-    
 }

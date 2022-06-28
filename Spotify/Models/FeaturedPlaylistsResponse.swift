@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для избранных плейлистов
 struct FeaturedPlaylistsResponse: Codable {
     let playlists: PlaylistResponse
 }

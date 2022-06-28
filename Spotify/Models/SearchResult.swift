@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель результатов поиска
 enum SearchResult {
     case artist(model: Artist)
     case album(model: Album)

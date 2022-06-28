@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+///Модель ответа для детальной информации об альбоме
 struct AlbumDetailsResponse: Codable {
     let album_type: String
     let artists: [Artist]

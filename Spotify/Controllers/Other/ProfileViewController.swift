@@ -8,28 +8,50 @@
 import SDWebImage
 import UIKit
 
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+///Контроллер профиля пользователя
+class ProfileViewController: UIViewController {
 
+    // MARK: - Private Properties
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: "cell")
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: "cell"
+        )
         return tableView
     }()
     
     private var models = [String]()
     
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Профиль"
-        tableView.delegate = self
-        tableView.dataSource = self
-        view.addSubview(tableView)
+        settingView()
+        setupDelegates()
         fetchProfile()
-        view.backgroundColor = .systemBackground
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
     }
 
+    // MARK: - Private Methods
+
+    private func settingView() {
+        title = "Профиль"
+        view.backgroundColor = .systemBackground
+        view.addSubview(tableView)
+    }
+    
+    private func setupDelegates() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
     private func fetchProfile() {
         APICaller.shared.getCurrentUserProfile { [weak self] result in
             DispatchQueue.main.async {
@@ -42,11 +64,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
     }
     
     private func updateUI(with model: UserProfile) {
@@ -65,16 +82,25 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             return
         }
         
-        let headerView = UIView(frame: CGRect(x: 0,
-                                              y: 0,
-                                              width: view.width,
-                                              height: view.width/1.5
-                                             ))
-        let imageSize: CGFloat = headerView.height/2
-        let imageView = UIImageView(frame: CGRect(x: 0,
-                                                  y: 0,
-                                                  width: imageSize,
-                                                  height: imageSize))
+        let headerView = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: view.width,
+                height: view.width / 1.5
+            )
+        )
+        
+        let imageSize: CGFloat = headerView.height / 2
+        let imageView = UIImageView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: imageSize,
+                height: imageSize
+            )
+        )
+        
         headerView.addSubview(imageView)
         imageView.center = headerView.center
         imageView.contentMode = .scaleAspectFill
@@ -93,8 +119,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(label)
         label.center = view.center
     }
-    
-    // MARK: - TableView
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return models.count
     }

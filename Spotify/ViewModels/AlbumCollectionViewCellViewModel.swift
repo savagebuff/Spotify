@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для ячейки коллекции альбомов
 struct AlbumCollectionViewCellViewModel {
     let name: String
     let artistName: String

@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для рекомендаций
 struct RecommendationsResponse: Codable {
     let tracks: [AudioTrack]
 }

@@ -8,19 +8,18 @@
 import Foundation
 
 final class AuthManager {
-    static let shared = AuthManager()
     
-    private var refreshingToken = false
+    // MARK: - Public Properties
     
-    struct Constant {
+    public static let shared = AuthManager()
+    
+    public struct Constant {
         static let clientID = "d679a219469949b98e6a76e437fe6964"
         static let clientSecret = "1954b3ffacef4f60a929472dbac6ca2b"
         static let tokenAPIURL = "https://accounts.spotify.com/api/token"
         static let redirectURI = "https://vk.com/savage.buff"
         static let scopes = "user-read-private%20playlist-modify-public%20playlist-read-private%20playlist-modify-private%20user-follow-read%20user-library-modify%20user-library-read%20user-read-email"
     }
-    
-    private init() {}
     
     public var signInURL: URL? {
         let base = "https://accounts.spotify.com/authorize"
@@ -29,9 +28,13 @@ final class AuthManager {
         return URL(string: string)
     }
     
-    var isSignedIn: Bool {
+    public var isSignedIn: Bool {
         return accessToken != nil
     }
+    
+    // MARK: - Private Propeties
+    
+    private var refreshingToken = false
     
     private var accessToken: String? {
         return UserDefaults.standard.string(forKey: "access_token")
@@ -53,6 +56,14 @@ final class AuthManager {
         let fiveMinutes: TimeInterval = 300
         return currentDate.addingTimeInterval(fiveMinutes) >= expirationDate
     }
+    
+    private var onRefreshBlocks = [((String) -> Void)]()
+    
+    // MARK: - Initialization
+    
+    private init() {}
+    
+    // MARK: - Public Methods
     
     public func exchangeCodeForToken(
         code: String,
@@ -107,8 +118,6 @@ final class AuthManager {
         }
         task.resume()
     }
-    
-    private var onRefreshBlocks = [((String) -> Void)]()
     
     // Supplies valid token to be used with API Calls
     public func withValidToken(completion: @escaping (String) -> Void) {
@@ -197,6 +206,8 @@ final class AuthManager {
         }
         task.resume()
     }
+    
+    // MARK: - Private Methods
     
     private func cacheToken(result: AuthResponse) {
         UserDefaults.standard.setValue(result.access_token,

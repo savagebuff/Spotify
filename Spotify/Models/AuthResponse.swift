@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+///Модель ответа при авторизации
 struct AuthResponse : Codable {
     let access_token: String
     let expires_in: Int

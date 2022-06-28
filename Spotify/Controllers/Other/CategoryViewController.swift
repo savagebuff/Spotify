@@ -7,11 +7,12 @@
 
 import UIKit
 
+///Контроллер категорий
 class CategoryViewController: UIViewController {
-    // MARK: - Properties
     
-    let category: Category
+    // MARK: - Private Properties
     
+    private let category: Category
     private var playlists = [Playlist]()
     
     private let collectionView = UICollectionView(
@@ -53,7 +54,8 @@ class CategoryViewController: UIViewController {
         )
     )
     
-    // MARK: - Init
+    // MARK: - Initialization
+    
     init(category: Category) {
         self.category = category
         super.init(nibName: nil, bundle: nil)
@@ -63,22 +65,43 @@ class CategoryViewController: UIViewController {
         fatalError()
     }
     
-    // MARK: - Lifecycle
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        settingView()
+        setupCollectionView()
+        setupDelegate()
+        setupCategoryPlaylist()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
         title = category.name
         view.addSubview(collectionView)
         view.backgroundColor = .systemBackground
+    }
+    
+    private func setupDelegate() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    private func setupCollectionView() {
         collectionView.backgroundColor = .systemBackground
         collectionView.register(
             FeaturedPlaylistCollectionViewCell.self,
             forCellWithReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier
         )
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
+    }
+    
+    private func setupCategoryPlaylist() {
         APICaller.shared.getCategoryPlaylist(category: category) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -91,14 +114,9 @@ class CategoryViewController: UIViewController {
             }
         }
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
-    }
-    
 }
 
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 
 extension CategoryViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

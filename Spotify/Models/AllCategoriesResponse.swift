@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для всех категорий
 struct AllCategoriesResponse: Codable {
     let categories: Categories
 }

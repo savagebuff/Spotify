@@ -7,8 +7,11 @@
 
 import UIKit
 
+///Контроллер плеера
 class PlayerViewController: UIViewController {
 
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

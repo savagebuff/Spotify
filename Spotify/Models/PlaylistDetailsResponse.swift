@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для детальной информации об альбоме
 struct PlaylistDetailsResponse: Codable {
     let description: String
     let external_urls: [String: String]

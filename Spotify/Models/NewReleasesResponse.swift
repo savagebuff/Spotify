@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Модель ответа для новых релизов
 struct NewReleasesResponse: Codable {
     let albums: AlbumsResponse
 }

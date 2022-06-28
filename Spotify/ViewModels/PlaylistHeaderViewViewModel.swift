@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для хеддера плейлистов
 struct PlaylistHeaderViewViewModel {
     let name: String?
     let ownerName: String?

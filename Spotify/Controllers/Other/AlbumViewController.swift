@@ -7,9 +7,11 @@
 
 import UIKit
 
+///Контроллер альбома
 class AlbumViewController: UIViewController {
 
     // MARK: - Private Properties
+    
     private let album: Album
     
     private let collectionView = UICollectionView(
@@ -52,7 +54,8 @@ class AlbumViewController: UIViewController {
     
     private var viewModels = [AlbumCollectionViewCellViewModel]()
     
-    // MARK: - Init
+    // MARK: - Initialization
+    
     init(album: Album) {
         self.album = album
         super.init(nibName: nil, bundle: nil)
@@ -62,14 +65,36 @@ class AlbumViewController: UIViewController {
         fatalError()
     }
     
-    // MARK: - Methods
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        settingView()
+        setupCollectionView()
+        setupDelegates()
+        setupAlbumDetails()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
+    }
+    
+    // MARK: - Private Methods
+    
+    private func settingView() {
         title = album.name
         view.backgroundColor = .systemBackground
         
         view.addSubview(collectionView)
+    }
+    
+    private func setupDelegates() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    private func setupCollectionView() {
         collectionView.register(
             AlbumTrackCollectionViewCell.self,
             forCellWithReuseIdentifier: AlbumTrackCollectionViewCell.identifier
@@ -80,9 +105,9 @@ class AlbumViewController: UIViewController {
             withReuseIdentifier: PlaylistHeaderCollectionReusableView.identifier
         )
         collectionView.backgroundColor = .systemBackground
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
+    }
+    
+    private func setupAlbumDetails() {
         APICaller.shared.getAlbumDetails(for: album) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -100,13 +125,6 @@ class AlbumViewController: UIViewController {
             }
         }
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        collectionView.frame = view.bounds
-    }
-    
 }
 
 // MARK: - Data Source, Delegate

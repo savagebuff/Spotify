@@ -8,10 +8,12 @@
 import SafariServices
 import UIKit
 
-class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate {
+///Контроллер поиска
+final class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate {
     
-    // MARK: - Properties
-    let searchController: UISearchController = {
+    // MARK: - Private Properties
+    
+    private let searchController: UISearchController = {
         let vc = UISearchController(searchResultsController: SearchResultsViewController())
         vc.searchBar.placeholder = "Песни, Артисты, Альбомы"
         vc.searchBar.searchBarStyle = .minimal
@@ -21,14 +23,15 @@ class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchB
     
     private let collectionView: UICollectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { _, _  -> NSCollectionLayoutSection? in
-            let item = NSCollectionLayoutItem(layoutSize:
-                                                NSCollectionLayoutSize(
-                                                    widthDimension: .fractionalWidth(1),
-                                                    heightDimension: .fractionalHeight(1)
-                                                )
-            )
-            
+        collectionViewLayout: UICollectionViewCompositionalLayout(
+            sectionProvider: { _, _  -> NSCollectionLayoutSection? in
+                let item = NSCollectionLayoutItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .fractionalHeight(1)
+                    )
+                )
+                
             item.contentInsets = NSDirectionalEdgeInsets(
                 top: 2,
                 leading: 7,
@@ -58,35 +61,13 @@ class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchB
     
     private var categories = [Category]()
     
-    // MARK: - Lifecylce
+    // MARK: - Life Cylce
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        
-        navigationItem.searchController = searchController
-        
-        view.addSubview(collectionView)
-        collectionView.register(
-            CategoryCollectionViewCell.self,
-            forCellWithReuseIdentifier: CategoryCollectionViewCell.identifier
-        )
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.backgroundColor = .systemBackground
-        APICaller.shared.getCategories { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let categories):
-                    self?.categories = categories
-                    self?.collectionView.reloadData()
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        }
+        setupDelegates()
+        settingView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,8 +76,9 @@ class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchB
     }
     
     
-    // MARK: - search methods
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    // MARK: - Public Methods
+    
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let resultsController = searchController.searchResultsController as? SearchResultsViewController,
               let query = searchController.searchBar.text,
         !query.trimmingCharacters(in: .whitespaces).isEmpty else {
@@ -118,11 +100,44 @@ class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchB
         }
     }
     
-    func updateSearchResults(for searchController: UISearchController) {
+    public func updateSearchResults(for searchController: UISearchController) {
         
     }
-
+    
+    // MARK: - Private Methods
+    
+    private func setupDelegates() {
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    private func settingView() {
+        view.backgroundColor = .systemBackground
+        navigationItem.searchController = searchController
+        
+        view.addSubview(collectionView)
+        collectionView.register(
+            CategoryCollectionViewCell.self,
+            forCellWithReuseIdentifier: CategoryCollectionViewCell.identifier
+        )
+        collectionView.backgroundColor = .systemBackground
+        APICaller.shared.getCategories { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let categories):
+                    self?.categories = categories
+                    self?.collectionView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
 }
+
+// MARK: - SearchResultsViewControllerDelegate
 
 extension SearchViewController: SearchResultsViewControllerDelegate {
     func didTapResult(_ result: SearchResult) {
@@ -147,7 +162,7 @@ extension SearchViewController: SearchResultsViewControllerDelegate {
     }
 }
 
-// MARK: - DataSource, Delegate
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
 extension SearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {

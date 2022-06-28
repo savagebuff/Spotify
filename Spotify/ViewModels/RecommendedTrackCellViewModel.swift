@@ -7,6 +7,7 @@
 
 import Foundation
 
+///Вью модель для ячейки рекомендованных треков
 struct RecommendedTrackCellViewModel {
     let name: String
     let artistName: String
