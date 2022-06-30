@@ -30,7 +30,7 @@ final class PlaybackPresenter {
     private var currentTrack: AudioTrack? {
         if let track = track, tracks.isEmpty {
             return track
-        } else if let player = self.playerQueue, !tracks.isEmpty {
+        } else if !tracks.isEmpty, tracks.count > index {
             return tracks[index]
         }
         return nil
@@ -123,13 +123,15 @@ extension PlaybackPresenter: PlayerViewControllerDelegate {
         if tracks.isEmpty {
             // Not playlist or album
             player?.pause()
+            player?.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
             player?.play()
         } else if let firstItem = playerQueue?.items().first {
-            playerQueue?.pause()
-            playerQueue?.removeAllItems()
-            playerQueue = AVQueuePlayer(items: [firstItem])
-            playerQueue?.play()
-            playerQueue?.volume = 0.5
+            // TODO: - доделать это позже
+//            playerQueue?.pause()
+//            playerQueue?.removeAllItems()
+//            playerQueue = AVQueuePlayer(items: [firstItem])
+//            playerQueue?.play()
+//            playerQueue?.volume = 0.5
         }
     }
     
