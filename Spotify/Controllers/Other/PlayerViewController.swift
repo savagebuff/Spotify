@@ -6,16 +6,28 @@
 //
 
 import UIKit
+import SDWebImage
+
+protocol PlayerViewControllerDelegate: AnyObject {
+    func didTapPlayPause()
+    func didTapForward()
+    func didTapBackward()
+    func didSlideSlider(_ value: Float)
+}
 
 ///Контроллер плеера
 class PlayerViewController: UIViewController {
+    
+    // MARK: - Public Properties
+    
+    public weak var dataSource: PlayerDataSource?
+    public weak var delegate: PlayerViewControllerDelegate?
 
     // MARK: - Pivate Properties
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemBlue
         return imageView
     }()
     
@@ -28,11 +40,18 @@ class PlayerViewController: UIViewController {
         settingView()
         setupDelegate()
         configureBarButtons()
+        configure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupFrames()
+    }
+    
+    // MARK: - Public Methods
+    
+    public func refreshUI() {
+        configure()
     }
     
     // MARK: - Actions
@@ -85,20 +104,34 @@ class PlayerViewController: UIViewController {
             action: #selector(didTapAction)
         )
     }
+    
+    private func configure() {
+        imageView.sd_setImage(with: dataSource?.imageURL, completed: nil)
+        controlsView.configure(
+            with: PlayerControlsViewViewModel(
+                title: dataSource?.songName,
+                subtitle: dataSource?.subtitle
+            )
+        )
+    }
 }
 
 // MARK: - PlayerControlsViewDelegate
 
 extension PlayerViewController: PlayerControlsViewDelegate {
     func playerControlsViewDidTapPlayPauseButton(_ playerControlsView: PlayerControlsView) {
-        
+        delegate?.didTapPlayPause()
     }
     
     func playerControlsViewDidTapForwardButton(_ playerControlsView: PlayerControlsView) {
-        
+        delegate?.didTapForward()
     }
     
     func playerControlsViewDidTapBackwardButton(_ playerControlsView: PlayerControlsView) {
-        
+        delegate?.didTapBackward()
+    }
+    
+    func playerControlsView(_ playerControlsView: PlayerControlsView, didSlideSlider value: Float) {
+        delegate?.didSlideSlider(value)
     }
 }
