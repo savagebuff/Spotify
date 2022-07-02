@@ -97,7 +97,7 @@ final class HomeViewController: UIViewController {
                 let vc = LibraryPlaylistsViewController()
                 vc.selectionHandler = { playlist in
                     APICaller.shared.addTrackToPlaylist(
-                        trak: model,
+                        track: model,
                         playlist: playlist
                     ) { succes in
                         print("added to playlist: \(succes)")
