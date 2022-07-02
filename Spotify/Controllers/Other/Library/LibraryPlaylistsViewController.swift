@@ -10,6 +10,10 @@ import AVFoundation
 
 class LibraryPlaylistsViewController: UIViewController {
 
+    // MARK: - Public Properties
+    
+    public var selectionHandler: ((Playlist) -> Void)?
+    
     // MARK: - Private Properties
     
     private var playlists = [Playlist]()
@@ -34,6 +38,7 @@ class LibraryPlaylistsViewController: UIViewController {
         setupTableView()
         setupNoPlaylistView()
         getCurrentUserPlaylists()
+        checkSelectionHandler()
     }
     
     override func viewDidLayoutSubviews() {
@@ -73,7 +78,23 @@ class LibraryPlaylistsViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    // MARK: - Actions
+    
+    @objc private func didTapClose() {
+        dismiss(animated: true)
+    }
+    
     // MARK: - Private Methods
+    
+    private func checkSelectionHandler() {
+        if selectionHandler != nil {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .close,
+                target: self,
+                action: #selector(didTapClose)
+            )
+        }
+    }
     
     private func getCurrentUserPlaylists() {
         APICaller.shared.getCurrentUserPlaylist { [weak self] result in
@@ -161,6 +182,21 @@ extension LibraryPlaylistsViewController: UITableViewDelegate, UITableViewDataSo
             )
         )
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let playlist = playlists[indexPath.row]
+        
+        guard selectionHandler == nil else {
+            selectionHandler?(playlist)
+            dismiss(animated: true)
+            return
+        }
+        
+        let vc = PlaylistViewController(playlist: playlist)
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

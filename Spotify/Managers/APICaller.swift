@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AudioToolbox
 
 final class APICaller {
     
@@ -144,7 +145,39 @@ final class APICaller {
     }
     
     public func addTrackToPlaylist(trak: AudioTrack, playlist: Playlist, compeltion: @escaping (Bool) -> Void) {
-        
+        createRequest(
+            with: URL(string: Constants.baseAPIURL + "/playlists/\(playlist.id)/tracks"),
+            type: .POST
+        ) { baseRequest in
+            var request = baseRequest
+            let json = [
+                "uris" : [
+                    "spotify:track:\(trak.id)"
+                ]
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    compeltion(false)
+                    return
+                }
+
+                do {
+                    let result = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
+                    if let response = result as? [String : Any],
+                       response["snapshot_id"] as? String != nil {
+                        compeltion(true)
+                    } else {
+                        compeltion(false)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                    compeltion(false)
+                }
+            }
+            task.resume()
+        }
     }
     
     public func removeTrackFromPlaylist(track: AudioTrack, playlist: Playlist, compeltion: @escaping (Bool) -> Void) {

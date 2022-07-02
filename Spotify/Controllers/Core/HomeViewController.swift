@@ -56,6 +56,7 @@ final class HomeViewController: UIViewController {
         settingView()
         confiqureCollectionView()
         fetchData()
+        addLongTapGesture()
     }
     
     override func viewDidLayoutSubviews() {
@@ -72,7 +73,51 @@ final class HomeViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc private func didlongPress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else {
+            return
+        }
+        
+        let touchPoint = gesture.location(in: collectionView)
+        guard let indexPath = collectionView.indexPathForItem(at: touchPoint),
+              indexPath.section == 2 else {
+            return
+        }
+        
+        let model = tracks[indexPath.row]
+        
+        let actionSheet = UIAlertController(
+            title: model.name,
+            message: "Хотите добавить это в плейлист?",
+            preferredStyle: .actionSheet
+        )
+        actionSheet.addAction(UIAlertAction(title: "Отменить", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Добавить", style: .default, handler: { [weak self] _ in
+            DispatchQueue.main.async {
+                let vc = LibraryPlaylistsViewController()
+                vc.selectionHandler = { playlist in
+                    APICaller.shared.addTrackToPlaylist(
+                        trak: model,
+                        playlist: playlist
+                    ) { succes in
+                        print("added to playlist: \(succes)")
+                        
+                    }
+                }
+                vc.title = "Выберите Плейлист"
+                self?.present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+            }
+        }))
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
     // MARK: - Private Methods
+    
+    private func addLongTapGesture() {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(didlongPress(_:)))
+        collectionView.isUserInteractionEnabled = true
+        collectionView.addGestureRecognizer(gesture)
+    }
     
     private func settingView() {
         title = "Главная"
